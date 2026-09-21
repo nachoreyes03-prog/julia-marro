@@ -1,0 +1,218 @@
+/* ══════════════════════════════════════════════════
+   EL DISCO ADENTRO DEL PORTFOLIO — "Boston a BSAS"
+   La página del disco fusionada en Selected work › Album. Es un bloque claro (la pared
+   del arte de tapa) en medio de la página negra: se entra al mundo del disco.
+   Todo con prefijo alb- ; la paleta es la del sitio del disco, sacada del arte.
+   Las filas de temas son las mismas del portfolio (.tr): acá sólo se les cambian las
+   variables de color y se les agrega el título manuscrito y el fondo verde al prenderse.
+   ══════════════════════════════════════════════════ */
+
+.alb{
+  --verde:#375542; --baldosa-cl:#8FC0A9; --pared:#EAE5E4; --papel:#F3F0EC; --tinta:#14171B; --negro:#0B0C0D;
+  /* de borde a borde: la sección .work tiene padding, el disco no */
+  margin:0 calc(var(--pad) * -1);
+  background:var(--pared) url("../img/album/paper.jpg") center top/cover;
+  color:var(--tinta);
+}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* ─────────── EL CARTEL ─────────── */
+.alb-hero{position:relative;height:clamp(440px,90svh,62vw);overflow:hidden}
+/* el cartel va QUIETO: Nacho sacó el parallax del mouse (21/9), mareaba. Sólo se mueven la
+   lupa y los autos. bottom:0 para que la vereda termine justo donde arranca la barra negra */
+.alb-media{position:absolute;inset:0}
+.alb-frame{position:relative;width:100%;height:100%}
+.alb-frame picture{display:block;width:100%;height:100%}
+/* anclada abajo: si hay que recortar se come pared vacía de arriba, nunca el piso */
+.alb-frame img{width:100%;height:100%;max-width:none;object-fit:cover;object-position:50% 100%}
+/* la lupa: la imagen a color calzada al píxel sobre la byn, destapada por una máscara circular */
+.alb-color{
+  position:absolute;inset:0;pointer-events:none;z-index:1;
+  -webkit-mask-image:radial-gradient(circle 0px at 50% 50%,#000 60%,transparent 100%);
+          mask-image:radial-gradient(circle 0px at 50% 50%,#000 60%,transparent 100%);
+}
+@media (hover:none){.alb-color,.alb-ring{display:none}}
+/* capas: pared (byn) → autos → cartel recortado con alfa → lupa */
+.alb-cars{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1}
+.alb-cut{position:absolute;inset:0;pointer-events:none;z-index:1}
+.alb-car{position:absolute;left:0;top:0;will-change:transform}
+.alb-car-in{position:relative;width:100%}
+.alb-car.flip .alb-car-in{transform:scaleX(-1)}
+.alb-car-body{display:block;width:100%;height:auto !important;object-fit:fill !important}
+.alb-wheel{position:absolute;border-radius:50%;animation:albRoll var(--roll,.3s) linear infinite;filter:blur(.6px);object-fit:fill !important}
+@keyframes albRoll{to{transform:rotate(-360deg)}}
+.alb-smoke{position:absolute;pointer-events:none;will-change:transform,opacity;background:center/contain no-repeat}
+.alb-smoke.s1{background-image:url("../img/album/smoke-1.webp")}
+.alb-smoke.s2{background-image:url("../img/album/smoke-2.webp")}
+.alb-smoke.s3{background-image:url("../img/album/smoke-3.webp")}
+
+/* el grafiti: el JS lo calza donde estaba pintado en la tapa. Negro normal, verde con
+   hover o cuando un auto le pasa por atrás. Clic = baja a los temas. */
+.alb-title{position:absolute;left:0;top:70%;margin:0;line-height:0;z-index:2}
+.alb-logo{
+  position:relative;display:block;width:clamp(150px,15vw,280px);line-height:0;
+  clip-path:inset(0 100% 0 0);transition:clip-path 1.1s cubic-bezier(.65,0,.35,1),transform .5s var(--ease-out);
+}
+.alb-hero.in .alb-logo{clip-path:inset(0 0 0 0)}
+.alb-logo picture{display:block;height:auto}
+.alb-logo img{width:100%;height:auto;display:block;object-fit:fill}
+.alb-logo-b{position:absolute;inset:0;opacity:0;transition:opacity .3s var(--ease)}
+.alb-logo:hover .alb-logo-b,.alb-logo:focus-visible .alb-logo-b,.alb-logo.lit .alb-logo-b{opacity:1}
+.alb-logo:hover{transform:rotate(-.8deg) scale(1.02)}
+
+/* la foto de adentro del cartel: abre el collage a color */
+.alb-photo{position:absolute;z-index:2;display:none;cursor:zoom-in}
+.alb-photo.ready{display:block}
+.alb-ring{
+  position:absolute;top:0;left:0;z-index:3;pointer-events:none;border-radius:50%;
+  border:2px solid rgba(243,240,236,.85);box-shadow:0 0 0 1px rgba(20,23,27,.35),0 10px 30px rgba(20,23,27,.3);
+  opacity:0;transition:opacity .25s;
+}
+.alb-ring.on{opacity:1}
+.alb-tag{
+  position:absolute;left:50%;bottom:-14px;transform:translate(-50%,6px);
+  background:var(--verde);color:var(--papel);padding:5px 12px;border-radius:99px;
+  font-size:.62rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;
+  opacity:0;transition:opacity .3s,transform .35s var(--ease-out);pointer-events:none;
+}
+.alb-photo:hover .alb-tag,.alb-photo:focus-visible .alb-tag{opacity:1;transform:translate(-50%,0)}
+
+/* ─────────── LA BARRA QUE PASA ─────────── */
+.alb-mq{background:var(--negro);color:var(--papel);overflow:hidden;padding:15px 0;position:relative;z-index:3}
+.alb-mq-track{display:flex;align-items:center;gap:30px;width:max-content;will-change:transform}
+.alb-mq-track span{font-size:clamp(.92rem,1.9vw,1.35rem);font-weight:500;white-space:nowrap}
+.alb-mq-track b{width:7px;height:7px;border-radius:50%;background:var(--baldosa-cl);flex:none;display:block}
+
+/* ─────────── CUERPO: TEMAS + EL DISCO ───────────
+   Acá adentro se dan vuelta las variables del portfolio: todo lo que usa --txt, --line,
+   etc. (las filas, los créditos) pasa solo a tinta sobre pared. */
+.alb-body{
+  --txt:#14171B; --txt-70:rgba(20,23,27,.78); --txt-45:rgba(20,23,27,.55); --line:rgba(20,23,27,.14);
+  --acc:#375542; --wave:rgba(243,240,236,.3); --wave-h:rgba(243,240,236,.6); --wave-on:#F3F0EC;   /* la onda siempre se ve sobre la fila verde */
+  max-width:1360px;margin:0 auto;padding:clamp(60px,8vw,120px) var(--pad) clamp(40px,6vw,90px);
+}
+.alb-head{
+  display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:20px clamp(28px,5vw,90px);align-items:end;
+  margin-bottom:clamp(28px,4vw,56px);scroll-margin-top:90px;
+}
+.alb-h{font-size:clamp(2.1rem,5.4vw,4.4rem);line-height:.98;font-weight:700;letter-spacing:-.025em;color:var(--txt)}
+/* sin viuda: text-wrap:pretty + las últimas palabras pegadas con &nbsp; en el HTML.
+   Lo importante va en medium para que el párrafo tenga dónde agarrarse. */
+.alb-intro{color:var(--txt-70);max-width:54ch;text-wrap:pretty}
+.alb-intro b{font-weight:500;color:var(--txt)}
+
+/* las filas: con HOVER sólo el título se pone verde y crece apenas; el rectángulo verde con el
+   texto claro aparece recién al hacer clic (tema sonando, o abierto con el +) */
+.alb .tr{isolation:isolate}
+.alb .tr::before{
+  content:"";position:absolute;inset:0;background:var(--verde);z-index:-1;
+  transform:scaleY(0);transform-origin:bottom;transition:transform .45s var(--ease-out);
+}
+.alb .tr.on::before,.alb .tr.open::before{transform:scaleY(1);transform-origin:top}
+.alb .tr.on,.alb .tr.open{
+  --txt:#F3F0EC; --txt-70:rgba(243,240,236,.85); --txt-45:rgba(243,240,236,.66); --acc:#8FC0A9;
+}
+/* títulos grandes SIN agrandar la sección: lo que crece la letra se le saca al aire de arriba y
+   abajo de la fila (antes 24px de padding y 48px de letra; ahora 13 y 70: la fila mide lo mismo) */
+.alb .tr-head{color:var(--txt);padding:clamp(9px,.9vw,13px) clamp(8px,1.2vw,16px);transition:padding .35s var(--ease-out),color .3s}
+.alb .tr:not(.soon) .tr-head:hover{padding-left:clamp(8px,1.2vw,16px)}   /* sin corrimiento al pasar el mouse */
+.alb .tr.on .tr-t strong{color:var(--txt)}
+.alb .tr-pad{padding-left:calc(56px + clamp(8px,1.2vw,16px));padding-right:clamp(8px,1.2vw,16px)}
+.alb .crew dd{color:var(--txt)}
+/* el título con la letra de Julia: la imagen del manuscrito (tinta negra con alfa). Cuando la
+   fila se prende en verde, el filtro la pasa a blanco. Es <img> y no máscara CSS a propósito:
+   las máscaras no cargan abriendo el archivo con doble clic y el título desaparecía. */
+.tr-t strong.hand{display:block;position:relative;width:max-content;max-width:100%;line-height:0;transform-origin:left center;transition:transform .45s var(--ease-out)}
+.tr-t strong.hand img{height:clamp(42px,4.9vw,70px);width:auto;max-width:100%;object-fit:contain;object-position:left center;transition:filter .3s,opacity .3s;user-select:none;-webkit-user-drag:none}
+/* .hk = la tinta negra; .hg = la misma letra en verde, encima, invisible hasta el hover */
+.tr-t strong.hand .hg{position:absolute;left:0;top:0;opacity:0}
+@media (hover:hover){
+  .alb .tr:not(.soon):not(.on):not(.open) .tr-head:hover .hand{transform:scale(1.045)}
+  .alb .tr:not(.soon):not(.on):not(.open) .tr-head:hover .hg{opacity:1}
+  .alb .tr:not(.soon):not(.on):not(.open) .tr-head:hover .hk{opacity:0}
+}
+/* fila prendida (clic): la tinta pasa a blanco */
+.alb .tr.on .hk,.alb .tr.open .hk{filter:brightness(0) invert(.96)}
+.alb .tr-t span{margin-top:4px}
+
+/* el disco: texto + botón a la izquierda, créditos a la derecha, y abajo el CD */
+.alb-rec{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(32px,6vw,90px);align-items:start;
+  margin-top:clamp(64px,9vw,130px);padding-top:clamp(48px,7vw,100px);border-top:1px solid var(--line);
+}
+.alb-rec-txt .alb-h{font-size:clamp(1.7rem,3.8vw,3rem);margin-bottom:20px}
+.alb-rec-txt p{color:var(--txt-70);max-width:46ch}
+.alb-credits div{
+  display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:12px 0;
+  border-top:1px solid var(--line);transition:padding-left .4s var(--ease-out),background .4s;
+}
+.alb-credits div:last-child{border-bottom:1px solid var(--line)}
+.alb-credits div:hover{padding-left:10px;background:rgba(55,85,66,.06)}
+.alb-credits dt{font-size:.8rem;color:var(--txt-45);flex:none}
+.alb-credits dd{font-weight:500;font-size:.98rem;text-align:right;color:var(--txt)}
+.alb-credits dd i{font-style:normal;font-weight:300;font-size:.8rem;color:var(--txt-45)}
+.alb-mock{max-width:1000px;margin:clamp(40px,6vw,90px) auto 0;will-change:transform}
+.alb-mock img{width:100%;height:auto}
+/* "Download the cover": grande y con la tapa al lado, en el bloque de texto del disco */
+.alb-dl{
+  display:inline-flex;align-items:center;gap:16px;margin-top:28px;padding:10px 26px 10px 10px;border-radius:999px;
+  background:var(--verde);color:var(--papel);box-shadow:0 14px 34px rgba(55,85,66,.32);
+  transition:transform .4s var(--ease-out),box-shadow .4s var(--ease-out),background .3s;
+}
+.alb-dl img{width:64px;height:64px;border-radius:50%;object-fit:cover;flex:none;box-shadow:0 0 0 2px rgba(243,240,236,.55)}
+.alb-dl span{display:flex;flex-direction:column;line-height:1.25}
+.alb-dl b{font-weight:600;font-size:clamp(1.05rem,1.5vw,1.3rem);letter-spacing:-.01em}
+.alb-dl i{font-style:normal;font-size:.8rem;opacity:.75}
+.alb-dl svg{width:26px;height:26px;flex:none;margin-left:6px;transition:transform .4s var(--ease-out)}
+.alb-dl:hover{transform:translateY(-3px);box-shadow:0 22px 46px rgba(55,85,66,.42);background:#2c4636}
+.alb-dl:hover svg{transform:translateY(3px)}
+.alb-dl.busy{opacity:.65;pointer-events:none}
+/* sobre la pared el botón va en el verde del cartel */
+.alb .btn{background:var(--verde);border-color:var(--verde);color:var(--papel)}
+.alb .btn:hover{background:var(--tinta);border-color:var(--tinta);color:var(--papel)}
+
+/* ─────────── EL COLLAGE EN ALTA ─────────── */
+.alb-lb{
+  position:fixed;inset:0;z-index:110;background:rgba(12,18,14,.95);
+  display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.alb-lb.open{opacity:1;pointer-events:auto}
+.alb-lb-stage{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:zoom-in;touch-action:none}
+.alb-lb-stage img{
+  max-width:94vw;max-height:88svh;width:auto;height:auto;transform:scale(.985);opacity:0;
+  transition:opacity .3s,transform .4s var(--ease-out);box-shadow:0 40px 100px rgba(0,0,0,.6);user-select:none;
+}
+.alb-lb.loaded .alb-lb-stage img{opacity:1;transform:scale(1)}
+.alb-lb.zoom .alb-lb-stage{cursor:grab}
+.alb-lb.zoom .alb-lb-stage.grabbing{cursor:grabbing}
+.alb-lb.zoom .alb-lb-stage img{max-width:none;max-height:none;transition:none;height:220vh;box-shadow:none}
+.alb-lb-spin{position:absolute;width:34px;height:34px;border-radius:50%;border:2px solid rgba(243,240,236,.2);border-top-color:#8FC0A9;animation:albSpin .8s linear infinite}
+.alb-lb.loaded .alb-lb-spin{display:none}
+@keyframes albSpin{to{transform:rotate(360deg)}}
+.alb-lb-x{
+  position:absolute;top:18px;right:18px;z-index:2;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(243,240,236,.1);color:#F3F0EC;font-size:1rem;transition:background .25s,transform .3s var(--ease-out);
+}
+.alb-lb-x:hover{background:rgba(243,240,236,.24);transform:rotate(90deg)}
+.alb-lb-hint{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);color:rgba(243,240,236,.5);font-size:.72rem;text-align:center;pointer-events:none;white-space:nowrap}
+
+/* ─────────── RESPONSIVE ─────────── */
+@media (max-width:980px){
+  .alb-head{grid-template-columns:1fr;align-items:start}
+  .alb-rec{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  /* en vertical va la tapa cuadrada entera, a todo el ancho; el grafiti, la foto y los
+     autos los calza el mismo JS con las zonas medidas sobre cover.jpg */
+  .alb-hero{height:auto}
+  .alb-media{position:relative;inset:auto;width:100%;transform:none !important}
+  .alb-frame{aspect-ratio:1/1;height:auto}
+  .alb-tag{opacity:.92;transform:translate(-50%,0);bottom:-10px;font-size:.54rem;padding:3px 9px}
+  .alb .tr-pad{padding-left:clamp(8px,1.2vw,16px)}
+  .alb-lb-hint{display:none}
+  .tr-t strong.hand img{height:clamp(38px,10.8vw,46px)}
+}
+
+/* el "+" de los créditos, adentro de la fila del disco */
+.alb .tr-top .tr-head{padding-right:calc(58px + clamp(8px,1.2vw,16px))}
+.alb .tr-more{right:clamp(8px,1.2vw,16px)}
