@@ -9,18 +9,18 @@
 const hero = $('#albHero');
 if (!hero) return;
 
-/* los créditos generales del disco: la suma de los de cada tema (documento de Julia, 21/9) */
+/* los créditos generales del disco: la suma de los de cada tema (documento de Julia, 21/9). Sólo nombres, sin escuela ni banda (pedido de Julia) */
 const ALBUM_CREDITS = [
   ['Produced & arranged','Julia Marro',''],
   ['Co-production & arrangement','Nicolas Damm',''],
   ['Vocals','Alejandro Guerra Ricco · Ariel Garcia · Alex Varvar · Santiago Bascope',''],
   ['Lyrics & co-writing','Ariel Garcia · Alex Varvar · Santiago Bascope',''],
-  ['Guitar','Ariel Nuñez','Berklee'],
-  ['Saxophone','Alejandro Taveras','Berklee'],
+  ['Guitar','Ariel Nuñez',''],
+  ['Saxophone','Alejandro Taveras',''],
   ['Percussion','Maxi Sayes',''],
-  ['Bass','Luciano Fortuny','Subeibaja Eléctrico'],
+  ['Bass','Luciano Fortuny',''],
   ['Mixing','Santiago Bascope · Julia Marro',''],
-  ['Mastering','Alessio De Marzo','Berklee']
+  ['Mastering','Alessio De Marzo','']
 ];
 
 /* Zonas del arte, en fracción 0-1: `wide` sobre hero-wide.jpg (escritorio) y `square`

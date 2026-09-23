@@ -338,7 +338,11 @@ h1,h2,h3,p{margin:0}
 .mini-vol input::-moz-range-progress{height:3px;border-radius:3px;background:var(--acc)}
 .mini-vol input::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--txt);margin-top:-4.5px;border:0}
 .mini-vol input::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:var(--txt);border:0}
-@media (hover:none){.mini-vol input{display:none}}
+/* táctil: sin hover, la barrita se abre tocando el parlante (.volopen) y tapa el título para que entre */
+:root.touch .mini-vol:hover input,:root.touch .mini-vol:focus-within input{width:0;opacity:0;margin:0}
+:root.touch .mini.volopen .mini-vol input{width:96px;opacity:1;margin:0 4px 0 6px;height:28px}
+:root.touch .mini.volopen .mini-txt{display:none}
+:root.touch .mini.volopen .mini-vol input::-webkit-slider-thumb{width:18px;height:18px;margin-top:-7.5px}
 .mini .ic-play{display:none;margin-left:2px}
 .mini.paused .ic-play{display:block}
 .mini.paused .ic-pause{display:none}

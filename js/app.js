@@ -11,9 +11,9 @@
 /* Títulos, orden y créditos: los de la contratapa + el documento "creditos Bos a bsas" que pasó Julia
    (21/9). OJO con los `id`: son los nombres de archivo de la sesión y NO dicen el título —
      intro = Boston · dualipa = Dance · dilla = Pretty Boy · doin-better = Doin' Better Without You ·
-     demo1 = Trusting Myself · boston-a-bsas = Forever · final-vox = Bangladesh · tango = Che Charles
-   (hasta el 21/9 Dance y Trusting Myself estaban cruzados, y los músicos de Pretty Boy figuraban en
-   Forever). "Trusting Myself" no vino en el documento de créditos: falta que Julia los pase. */
+     boston-a-bsas = Trusting Myself · demo1 = Forever · final-vox = Bangladesh · tango = Che Charles
+   (hasta el 21/9 Dance y Trusting Myself estaban cruzados, los músicos de Pretty Boy figuraban en
+   Forever, y Trusting Myself y Forever tenían el audio al revés: Julia lo corrigió escuchando el sitio). "Trusting Myself" no vino en el documento de créditos: falta que Julia los pase. */
 const TRACKS = [
   { id:'intro',         title:'Boston',                   dur:53.12,  hand:['boston',299],
     crew:[['Produced & arranged','Julia Marro · Nicolas Damm'],['Mixing','Julia Marro']] },
@@ -26,9 +26,9 @@ const TRACKS = [
   { id:'doin-better',   title:"Doin' Better Without You", dur:154.43, hand:['doin-better',137],
     crew:[['Produced, arranged & co-written','Julia Marro'],['Co-writing & arrangement','Alex Varvar'],
           ['Vocals','Alex Varvar · Santiago Bascope'],['Mixing','Santiago Bascope'],['Mastering','Alessio De Marzo']] },
-  { id:'demo1',         title:'Trusting Myself',          dur:193.27, hand:['trusting',258],
+  { id:'boston-a-bsas', title:'Trusting Myself',          dur:218.67, hand:['trusting',258],
     crew:[['Production','Julia Marro']] },
-  { id:'boston-a-bsas', title:'Forever',                  dur:218.67, hand:['forever',263],
+  { id:'demo1',         title:'Forever',                  dur:193.27, hand:['forever',263],
     crew:[['Produced & arranged','Julia Marro'],['Vocals & lyrics','Alex Varvar'],['Mixing','Julia Marro']] },
   { id:'final-vox',     title:'Bangladesh',               dur:157.73, hand:['bangladesh',187],
     crew:[['Produced, arranged & co-written','Julia Marro'],['Vocals & co-writing','Santiago Bascope'],['Mixing','Julia Marro']] },
@@ -275,61 +275,90 @@ $('#miniBtn').addEventListener('click', () => { if(cur<0) return; audio.paused ?
 $('#miniPrev').addEventListener('click', () => step(-1));
 $('#miniNext').addEventListener('click', () => step(1));
 
-/* ── arranca solo: el primer tema del disco, al 40% ──
-   La página pide sonar apenas carga. Si el navegador lo deja (ver README: visitas repetidas,
-   recarga después de haber tocado algo, o el lanzador "Abrir portfolio.bat"), suena de entrada.
-   Si lo rebota —ningún sitio puede saltearse eso— no se muestra ningún cartel: se queda
-   reintentando en silencio con CUALQUIER señal de la persona (mover el mouse, scrollear, tocar,
-   una tecla) y arranca en la primera que el navegador acepte, que suele ser el primer clic,
-   toque o tecla. Si ese primer clic ya elige otra cosa (otro tema, un video, los botones del
-   mini reproductor), manda esa elección y no se pisa. Se apaga con ?autoplay=0 */
-const AUTOPLAY_TRACK = 0, AUTOPLAY_VOL = .4;
+/* ── arranca solo: el primer tema del disco, al 50% ──
+   La página pide sonar apenas carga. Si el navegador lo deja (recargas, visitas repetidas, el
+   acceso directo "Portfolio Julia (con musica)"), suena de entrada. Si lo rebota —ninguna página
+   puede saltearse eso, hace falta un gesto de la persona— no se muestra ningún cartel: el mini
+   queda a la vista y se reintenta en silencio con cualquier señal (mouse, scroll, toque, tecla)
+   hasta que el navegador acepte una, que suele ser el primer clic. Si ese clic ya elige otra
+   cosa (otro tema, un video, los botones del mini), manda esa elección. Se apaga con ?autoplay=0 */
+const AUTOPLAY_TRACK = 0, AUTOPLAY_VOL = .5;
+/* el volumen elegido por la persona (la barrita); el fundido de entrada sube hasta acá */
+const VOL = { user: AUTOPLAY_VOL };
 (() => {
   const r = rows[AUTOPLAY_TRACK];
   if (!r || r.t.soon || /[?&]autoplay=0/.test(location.search)) return;
   audio.volume = AUTOPLAY_VOL;
   load(AUTOPLAY_TRACK, 'quiet');        // sin tocar la lista: al refrescar queda todo en modo normal
-  const HARD = ['pointerdown','pointerup','mousedown','click','touchend','keydown'];   // cuentan como gesto
-  const SOFT = ['mousemove','wheel','scroll','touchstart','touchmove'];                // no cuentan, pero se prueba igual
+  const HARD = ['pointerdown','pointerup','mousedown','click','touchend','keydown'];
+  const SOFT = ['mousemove','wheel','scroll','touchstart','touchmove'];
   let last = 0, done = false;
   const off = () => { done = true; HARD.concat(SOFT).forEach(t => removeEventListener(t, onSignal, true)); };
   const onSignal = e => {
     if (done) return;
-    if (cur !== AUTOPLAY_TRACK || !audio.paused) return off();                 // ya suena algo
+    if (cur !== AUTOPLAY_TRACK || !audio.paused) return off();
     const hard = HARD.includes(e.type);
-    if (hard && e.target.closest && e.target.closest('.tr-head, .vid-btn, .mini button')) return off();   // ese clic decide solo
+    if (hard && e.target.closest && e.target.closest('.tr-head, .vid-btn, .mini button, .mini input')) return off();
     const now = performance.now();
-    if (!hard && now - last < 350) return;      // los de movimiento, de a uno cada tanto
+    if (!hard && now - last < 350) return;
     last = now;
     const q = audio.play();
     if (q) q.then(() => { stopVideos(); off(); }).catch(() => {});
   };
   const p = audio.play();
   if (p) p.catch(() => {
-    mini.classList.add('show','paused');         // a la vista, con su play, sin cartel
+    mini.classList.add('show','paused');
     HARD.concat(SOFT).forEach(t => addEventListener(t, onSignal, {capture:true, passive:true}));
   });
 })();
 
+/* ── fundido de entrada ── cada vez que arranca un tema (o se reanuda), el volumen sube de 0 al
+   elegido en ~0,7 s, así no pega de golpe. (En iOS el volumen no se puede tocar por JS: ahí entra directo.) */
+(() => {
+  let raf = 0;
+  audio.addEventListener('play', () => {
+    cancelAnimationFrame(raf);
+    const to = VOL.user, t0 = performance.now(), D = 700;
+    try { audio.volume = 0; } catch (_) { return; }
+    if (audio.volume !== 0) return;              // iOS: no deja, no hay fundido
+    const step = now => {
+      const k = Math.min(1, (now - t0)/D);
+      audio.volume = to * k * k;
+      if (k < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+  });
+  audio.addEventListener('pause', () => cancelAnimationFrame(raf));
+})();
 
-/* ── volumen ── el parlante silencia / vuelve; la barrita lo regula. Arranca donde lo deja
-   AUTOPLAY_VOL. (En iOS el volumen de un <audio> no se puede tocar por JS: queda el silencio.) */
+/* ── volumen ── la barrita lo regula; el parlante silencia / vuelve. En pantallas táctiles no hay
+   hover, así que ahí el parlante ABRE la barrita (y tocando afuera se cierra); el silencio es
+   llevarla a 0. (En iOS el volumen de un <audio> no se puede tocar por JS; queda el del teléfono.) */
 (() => {
   const box = $('#miniVolBox'), mute = $('#miniMute'), vol = $('#miniVol');
-  audio.volume = AUTOPLAY_VOL;                   // siempre se arranca en ese volumen
-  let before = AUTOPLAY_VOL;
+  /* táctil = sin hover (o ?touch=1 para probarlo en escritorio); marca <html class="touch"> para el CSS */
+  const TOUCH = matchMedia('(hover:none)').matches || /[?&]touch=1/.test(location.search);
+  if (TOUCH) document.documentElement.classList.add('touch');
+  audio.volume = VOL.user;
+  let before = VOL.user;
   const paint = () => {
-    const v = audio.muted ? 0 : audio.volume;
+    const v = audio.muted ? 0 : VOL.user;
     vol.value = v; vol.style.setProperty('--v', (v*100).toFixed(0) + '%');
     box.classList.toggle('off', v === 0); box.classList.toggle('low', v > 0 && v < .5);
-    mute.setAttribute('aria-label', v === 0 ? 'Unmute' : 'Mute');
+    mute.setAttribute('aria-label', TOUCH ? 'Volume' : (v === 0 ? 'Unmute' : 'Mute'));
   };
-  vol.addEventListener('input', () => { audio.muted = false; audio.volume = +vol.value; if (+vol.value > 0) before = +vol.value; });
-  mute.addEventListener('click', () => {
-    if (audio.muted || audio.volume === 0){ audio.muted = false; audio.volume = before || AUTOPLAY_VOL; }
-    else { before = audio.volume; audio.muted = true; }
+  vol.addEventListener('input', () => {
+    audio.muted = false; VOL.user = +vol.value; audio.volume = VOL.user;
+    if (VOL.user > 0) before = VOL.user;
+    paint();
   });
-  audio.addEventListener('volumechange', paint);
+  mute.addEventListener('click', e => {
+    if (TOUCH){ e.stopPropagation(); mini.classList.toggle('volopen'); return; }
+    if (audio.muted || VOL.user === 0){ audio.muted = false; VOL.user = before || AUTOPLAY_VOL; audio.volume = VOL.user; }
+    else { before = VOL.user; audio.muted = true; }
+    paint();
+  });
+  if (TOUCH) addEventListener('pointerdown', e => { if (!e.target.closest('.mini-vol')) mini.classList.remove('volopen'); }, true);
   paint();
 })();
 /* ── onda ── */
