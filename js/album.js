@@ -14,7 +14,7 @@ const ALBUM_CREDITS = [
   ['Produced & arranged','Julia Marro',''],
   ['Co-production & arrangement','Nicolas Damm',''],
   ['Vocals','Alejandro Guerra Ricco · Ariel Garcia · Alex Varvar · Santiago Bascope',''],
-  ['Lyrics & co-writing','Ariel Garcia · Alex Varvar · Santiago Bascope',''],
+  ['Lyrics & co-writing','Alejandro Guerra Ricco · Ariel Garcia · Alex Varvar · Santiago Bascope',''],
   ['Guitar','Ariel Nuñez',''],
   ['Saxophone','Alejandro Taveras',''],
   ['Percussion','Maxi Sayes',''],

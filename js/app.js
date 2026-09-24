@@ -13,7 +13,7 @@
      intro = Boston · dualipa = Dance · dilla = Pretty Boy · doin-better = Doin' Better Without You ·
      boston-a-bsas = Trusting Myself · demo1 = Forever · final-vox = Bangladesh · tango = Che Charles
    (hasta el 21/9 Dance y Trusting Myself estaban cruzados, los músicos de Pretty Boy figuraban en
-   Forever, y Trusting Myself y Forever tenían el audio al revés: Julia lo corrigió escuchando el sitio). "Trusting Myself" no vino en el documento de créditos: falta que Julia los pase. */
+   Forever, y Trusting Myself y Forever tenían el audio al revés: Julia lo corrigió escuchando el sitio). Trusting Myself: créditos pasados por Julia el 23/9. */
 const TRACKS = [
   { id:'intro',         title:'Boston',                   dur:53.12,  hand:['boston',299],
     crew:[['Produced & arranged','Julia Marro · Nicolas Damm'],['Mixing','Julia Marro']] },
@@ -27,7 +27,7 @@ const TRACKS = [
     crew:[['Produced, arranged & co-written','Julia Marro'],['Co-writing & arrangement','Alex Varvar'],
           ['Vocals','Alex Varvar · Santiago Bascope'],['Mixing','Santiago Bascope'],['Mastering','Alessio De Marzo']] },
   { id:'boston-a-bsas', title:'Trusting Myself',          dur:218.67, hand:['trusting',258],
-    crew:[['Production','Julia Marro']] },
+    crew:[['Produced & arranged','Julia Marro'],['Vocals & lyrics','Alejandro Guerra Ricco'],['Mixing','Julia Marro']] },
   { id:'demo1',         title:'Forever',                  dur:193.27, hand:['forever',263],
     crew:[['Produced & arranged','Julia Marro'],['Vocals & lyrics','Alex Varvar'],['Mixing','Julia Marro']] },
   { id:'final-vox',     title:'Bangladesh',               dur:157.73, hand:['bangladesh',187],
